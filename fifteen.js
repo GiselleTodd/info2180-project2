@@ -5,10 +5,9 @@ window.onload = () => {
   let x = 0;
   let y = 0;
   let shufflebutton = document.getElementById("shufflebutton");
-  // let blankSpaceX , blankSpaceY;
-
-
-
+  let blankSpaceX  = "300px";
+  let blankSpaceY  = "300px";
+  
 
 
 
@@ -21,6 +20,7 @@ for (let i = 0; i < segs.length; i++){
     segs[i].style.backgroundPosition = `${-x}px ${-y}px`;
 
     x += 100;
+    
 
     if(x == 400){
       x=0
@@ -29,14 +29,15 @@ for (let i = 0; i < segs.length; i++){
 
     segs[i].addEventListener("mouseover", changeTileColour);
     segs[i].addEventListener("mouseout", removeChange);
-    segs[i].addEventListener("click", moveTile);
-
-
-
+    segs[i].addEventListener("click", slideTile);
+  
 
     }
 
-    shufflebutton.addEventListener("click", shuffleTiles);
+
+
+
+  shufflebutton.addEventListener("click", shuffle);
 
 
     function changeTileColour(){
@@ -52,29 +53,105 @@ for (let i = 0; i < segs.length; i++){
       this.style.textdecoration = "underline";
 
     }
+//change function names accordingly; misleading/confusing function names
+    function shuffle(){
+      for (let i = 0; i < 250; i++){
+
+        let rand = parseInt(Math.random() * 100) % 4;
+          if (rand == 0){
+            let mve = checkTopMove(blankSpaceX, blankSpaceY);
+
+            if (mve != -1){
+                swap(mve);
+            }
+          }
+
+          if (rand == 1){
+            let mve = checkBelowMove(blankSpaceX, blankSpaceY);
+
+            if (mve != -1){
+                swap(mve);
+            }
+          }
+
+          if (rand == 2){
+            let mve = checkLeftMove(blankSpaceX, blankSpaceY);
+
+            if (mve != -1){
+                swap(mve);
+            }
+          }
+
+          if (rand == 3){
+            let mve = checkRightMove(blankSpaceX, blankSpaceY);
+
+            if (mve != -1){
+                swap(mve);
+            }
+          }
+        
 
 
-    function shuffleTiles(){
-      let ppiece;
-      for (let i = 0; i < 100; i++)
-        seg = Math.floor(Math.random() * 20);
-        moveTile(segs[ppiece]);
+           
+      }
+
     }
 
-    function moveTile(){}
-
-    function canMove(){}
 
 
-    function leftMove(x, y){
+    function slideTile(){
+        if(canMove(parseInt(this.innerHTML))){
+          swap(this.innerHtML -1);
+        }
+
+    }
+
+
+
+     function swap(pos){
+
+        let temp = segs[pos].style.top;
+        segs[pos].style.top = blankSpaceY;
+        blankSpaceY = temp;
+
+        temp = segs[pos].style.left;
+        segs[pos].style.left = blankSpaceX;
+        blankSpaceX = temp;
+
+    }
+
+    function canMove(pos){
+          if (checkLeftMove(blankSpaceX, blankSpaceY) == (pos-1)){
+            return true;
+          }
+
+          if (checkRightMove(blankSpaceX, blankSpaceY) == (pos-1)){
+            return true;
+          
+          }
+
+          if (checkTopMove(blankSpaceX, blankSpaceY) == (pos-1)){
+            return true;
+          
+          }
+
+          if (checkBelowMove(blankSpaceX, blankSpaceY) == (pos-1)){
+            return true;
+          
+          }
+
+      }
+
+
+    function checkLeftMove(x, y){
       let pieceX = parseInt(x);
       let pieceY = parseInt(y);
 
 
-      if (tileX == 0){
+      if (pieceX == 0){
 
-        for (let i = 0; i < div.length; i++){
-            if ( parseInt(div[i].style.left)+ 100 == pieceX && parseInt(div[i].style.top) == pieceY ){
+        for (let i = 0; i < segs.length; i++){
+            if ( parseInt(segs[i].style.left)+ 100 == pieceX && parseInt(segs[i].style.top) == pieceY ){
 
                 return i;
 
@@ -92,15 +169,15 @@ for (let i = 0; i < segs.length; i++){
 
     }
 
-    function rightMove(x,y){
+    function checkRightMove(x,y){
       let pieceX = parseInt(x);
       let pieceY = parseInt(y);
 
       if (pieceX < 300){
 
-        for (let i = 0; i < div.length ; i++){
+        for (let i = 0; i < segs.length ; i++){
          
-            if(parseInt(div[i].style.left) - 100 == pieceX && parseInt(div[i].style.top) == pieceY){
+            if(parseInt(segs[i].style.left) - 100 == pieceX && parseInt(segs[i].style.top) == pieceY){
 
               return i;
             }
@@ -114,12 +191,56 @@ for (let i = 0; i < segs.length; i++){
 
     }
 
-    function aboveMove(x,y){}
+    function checkTopMove(x,y){
+      let pieceX = parseInt(x);
+      let pieceY = parseInt(y);
 
-    function belowMove(x,y){}
+      if (pieceY > 0){
 
-  
+        for (let i = 0; i < segs.length ; i++){
+         
+            if(parseInt(segs[i].style.top) + 100 == pieceY && parseInt(segs[i].style.topleft) == pieceX){
 
-   }
+              return i;
+            }
 
+        }
+
+      } else {
+
+        return -1;
+      }
+
+    }
+
+    function checkBelowMove(x,y){
+      let pieceX = parseInt(x);
+      let pieceY = parseInt(y);
+
+      if (pieceY < 300){
+
+        for (let i = 0; i < segs.length ; i++){
+         
+            if(parseInt(segs[i].style.top) - 100 == pieceY && parseInt(segs[i].style.left) == pieceX){
+
+              return i;
+            }
+
+        }
+
+      } else {
+
+        return -1;
+      }
+
+
+
+
+    }
+
+
+
+
+
+  }
 
